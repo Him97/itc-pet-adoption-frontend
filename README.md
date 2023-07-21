@@ -1,0 +1,8 @@
+- Create a new react App
+- Add bootsrap to your app.
+- Set one state for userName in App level and have a default value of your name
+- have one component for Menubar that takes you name as prop
+- have one component for FormHandler that takes your userName and can change your username.
+- Your form should have 4 inputs: Favourite pokemon, trainer, episode and username
+- On submit console.log the data and count how many times
+- everytime you change count, capture this moment and toast a success message using toastify
