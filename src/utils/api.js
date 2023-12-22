@@ -72,19 +72,19 @@ export const DELETE = async (url, body) => {
 
 const handleError = (error) => {
     if (typeof (error) == 'string') {
-        alert('String error',error)
+        return('String error',error)
     } if (error.response) {
         console.log('Status Code:', error.response.status);
         console.log('Response Data:', error.response.data);
         console.log('Response Headers:', error.response.headers);
         if (error.response.data && error.response.data.message) {
-          alert('Error: ' + error.response.data.message);
+          return('Error: ' + error.response.data.message);
         } else {
-          alert('An error occurred. Please try again.');
+          return('An error occurred. Please try again.');
         }
       } else if (error.request) {
-        alert('No response received');
+        return('No response received');
       } else {
-        alert('error message',error.message);
+        return('error message',error.message);
     }
 }

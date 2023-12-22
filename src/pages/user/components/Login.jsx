@@ -57,6 +57,7 @@ export default function Login({ open, handleClose }) {
 	const [password, setPassword] = useState('');
 	const [openSuccess, setOpenSuccess] = useState(false);
 	const [openError, setOpenError] = useState(false);
+	const [error, setError] = useState('');
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -74,7 +75,8 @@ export default function Login({ open, handleClose }) {
 				setOpenError(true);
 			}
 		} catch (error) {
-			console.error('Full Error Object:', error);
+			console.log(error.response.data);
+			setError(error.response.data.message);
 		}
 	};
 
@@ -197,7 +199,9 @@ export default function Login({ open, handleClose }) {
 				onClose={handleCloseAlert}
 			>
 				<Alert onClose={handleCloseAlert} severity='error'>
-					Oops! Something went wrong. Please try to log in again later.
+					{error
+						? error
+						: 'Oops! Something went wrong. Please try to log in again later.'}
 				</Alert>
 			</Snackbar>
 		</React.Fragment>

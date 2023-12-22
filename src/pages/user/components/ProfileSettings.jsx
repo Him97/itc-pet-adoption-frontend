@@ -75,6 +75,7 @@ export default function ProfileSettings({ open, handleClose, user }) {
 			setTimeout(async () => {
 				setOpenSuccess(true);
 				handleClose();
+				window.location.reload();
 			}, 1000);
 		} catch (error) {
 			setOpenError(true);
@@ -234,7 +235,7 @@ export default function ProfileSettings({ open, handleClose, user }) {
 ProfileSettings.propTypes = {
 	open: PropTypes.bool,
 	handleClose: PropTypes.func,
-	user: PropTypes.object,
+	user: PropTypes.object || PropTypes.string,
 };
 
 Fade.propTypes = {
