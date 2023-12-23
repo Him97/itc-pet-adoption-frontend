@@ -1,0 +1,11 @@
+{
+	"navbar": {
+		"home": "Home",
+		"search": "Search",
+		"pets": "Pets",
+		"mypets": "My Pets"
+	},
+	"home": {
+		"home": "Home"
+	}
+}

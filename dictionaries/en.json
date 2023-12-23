@@ -1,0 +1,19 @@
+{
+	"navbar": {
+		"home": "Home",
+		"search": "Search",
+		"pets": "Pets",
+		"mypets": "My Pets",
+		"page": "Page",
+		"addpets": "Add Pets",
+		"dashboard": "Dashboard"
+	},
+	"home": {
+		"home": "Home"
+	},
+	"footer": {
+		"xin": "Xin Li",
+		"copyright": "Copyright",
+		"littlellama": "Little Llama"
+	}
+}
