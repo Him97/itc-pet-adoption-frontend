@@ -3,34 +3,40 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Locale } from '@/i18n.config';
 import { getDictionary } from '@/lib/dictionary';
+import LocaleSwitcher from './LocaleSwitcher';
 
-function HideOnScroll(props) {
-	const { children, window } = props;
-	const trigger = useScrollTrigger({
-		target: window ? window() : undefined,
-	});
+export default async function Navbar({ lang }: { lang: Locale }) {
+	const { navigation } = await getDictionary(lang);
 
-	return (
-		<Slide appear={false} direction='down' in={!trigger}>
-			{children}
-		</Slide>
-	);
-}
+	const useScroll = () => {
+		const [scrollY, setScrollY] = React.useState<number>(0);
+		const handleScroll = () => {
+			setScrollY(window.scrollY);
+		};
 
-export default async function Navbar({
-	params: { lang },
-}: {
-	params: { lang: Locale };
-}) {
-	const { navbar } = await getDictionary(lang);
-	const [anchorElNav, setAnchorElNav] = React.useState(null);
-	const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-	const handleOpenNavMenu = (event) => {
-		setAnchorElNav(event.currentTarget);
+		React.useEffect(() => {
+			window.addEventListener('scroll', handleScroll);
+			return () => {
+				window.removeEventListener('scroll', handleScroll);
+			};
+		}, []);
+		return scrollY;
 	};
 
-	const handleOpenUserMenu = (event) => {
+	const scrollY = useScroll();
+	const isScrolled = scrollY > 0;
+
+	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+		null
+	);
+	const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+		null
+	);
+
+	const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorElNav(event.currentTarget);
+	};
+	const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorElUser(event.currentTarget);
 	};
 
@@ -44,204 +50,163 @@ export default async function Navbar({
 
 	const pages = [
 		{
-			page: navbar.home,
+			page: 'Home',
 			route: '/',
+			admin: false,
 		},
 		{
-			page: navbar.search,
+			page: 'Search',
 			route: '/search',
+			admin: false,
 		},
 		{
-			page: navbar.pets,
+			page: 'Pets',
 			route: '/pets',
+			admin: false,
 		},
 		{
-			page: navbar.mypets,
+			page: 'My Pets',
 			route: '/mypets',
+			admin: false,
 		},
-	];
-
-	const admin = [
 		{
-			page: navbar.addpets,
+			page: 'Add Pets',
 			route: '/addpet',
+			admin: true,
 		},
 		{
-			page: navbar.dashboard,
+			page: 'Dashboard',
 			route: '/dashboard',
+			admin: true,
 		},
 	];
 
 	return (
-		<HideOnScroll {...props}>
-			<nav className='sticky bg-white dark:bg-black'>
-				<div className='w2/3 md:w-full'>
-					<toolbar>
-						<Image
-							src='./src/assets/littleLlama.png'
-							alt='little-llama'
-							className='h-72'
-						/>
-						<Link
-							className='text-nowrap mr-2 text-teal-500 sm:hidden md:flex'
-							href='/'
-							sx={{
-								mr: 2,
-								fontFamily: 'Markazi Text',
-								fontWeight: 700,
-								letterSpacing: '.1rem',
-								color: 'teal',
-								textDecoration: 'none',
-							}}
-						>
-							{t('heading-little-llama')}
-						</Link>
+		<React.Fragment>
+			<nav
+				className={`transition-transform transform ${
+					isScrolled ? '-translate-y-full' : 'translate-y-0'
+				} bg-white/75 sticky`}
+			>
+				<div className='max-w-screen-md'>
+					<Image
+						alt='Little Llama'
+						src='./src/assets/littleLlama.png'
+						height={75}
+					/>
+					<Link
+						className='mr-2 sm:hidden md:flex tracking-widest no-underline font-bold text-teal-500'
+						href='/'
+					>
+						Little Llama
+					</Link>
 
-						<div className='grow-0 sm:flex md:hidden'>
-							<IconButton
-								size='large'
-								aria-label='account of current user'
-								aria-controls='menu-appbar'
-								aria-haspopup='true'
-								onClick={handleOpenNavMenu}
-								color='success'
-							>
-								<MenuIcon />
-							</IconButton>
-							<menu
-								id='menu-appbar'
-								anchorEl={anchorElNav}
-								anchorOrigin={{
-									vertical: 'bottom',
-									horizontal: 'left',
-								}}
-								keepMounted
-								transformOrigin={{
-									vertical: 'top',
-									horizontal: 'left',
-								}}
-								open={Boolean(anchorElNav)}
-								onClose={handleCloseNavMenu}
-								sx={{
-									display: { xs: 'block', md: 'none' },
-								}}
-							>
-								{pages.map((page, index) => (
-									<menuitem key={index} onClick={handleCloseNavMenu}>
-										<p textAlign='center'>{page.page}</p>
-									</menuitem>
-								))}
-							</menu>
-						</div>
-						<h5
-							className='wrap-0 grow-1 sm:flex md:hidden text-teal-500'
-							noWrap
-							href='/'
+					<div className='grow sm:flex md:hidden'>
+						<button
+							type='button'
+							onClick={handleOpenNavMenu}
+							className='bg-teal-500'
+						>
+							Menubutton
+						</button>
+						<menu
+							id='menu-appbar'
+							anchorEl={anchorElNav}
+							anchorOrigin={{
+								vertical: 'bottom',
+								horizontal: 'left',
+							}}
+							keepMounted
+							transformOrigin={{
+								vertical: 'top',
+								horizontal: 'left',
+							}}
+							open={Boolean(anchorElNav)}
+							onClose={handleCloseNavMenu}
 							sx={{
-								fontFamily: 'monospace',
-								fontWeight: 700,
-								letterSpacing: '.3rem',
-								textDecoration: 'none',
+								display: { xs: 'block', md: 'none' },
 							}}
 						>
-							{t('heading-little-llama')}
-						</h5>
-						<div className='grow-1 sm:hidden md:flex'>
-							<button
-								type='button'
-								className='text-teal-500 bg-transparent my-2'
-								onClick={handleCloseNavMenu}
-							>
-								<Link
-									href='/'
-									className='no-underline text-black dark:text-white'
-								>
-									{t('link-home')}
-								</Link>
-							</button>
-							<button
-								type='button'
-								className='text-teal-500 bg-transparent my-2'
-								onClick={handleCloseNavMenu}
-							>
-								<Link
-									href='/search'
-									className='no-underline text-black dark:text-white'
-								>
-									{t('text-search')}
-								</Link>
-							</button>
-							{user ? (
-								<button
-									type='button'
-									className='bg-teal-500 text-black my-2'
-									onClick={handleCloseNavMenu}
-								>
-									<Link
-										href='/mypets'
-										className='no-underline text-black dark:text-white'
-									>
-										{t('link-mypets')}
-									</Link>
+							{pages.map((page, index) => (
+								<button type='button' key={index} onClick={handleCloseNavMenu}>
+									<a className='text-center'>{page.page}</a>
 								</button>
-							) : (
-								<button
-									type='button'
-									className='text-teal-500 bg-transparent my-2'
-									onClick={handleCloseNavMenu}
-								>
-									<Link
-										href='/pets'
-										className='no-underline text-black dark:text-white'
-									>
-										{t('link-pets')}
-									</Link>
-								</button>
-							)}
+							))}
+						</menu>
+					</div>
+					<Link
+						className='sm:flex md:hidden font-mono font-bold tracking-widest grow no-underline text-teal-500'
+						href='/'
+					>
+						Little Llama
+					</Link>
+					<div className='grow sm:hidden md:flex'>
+						<button
+							type='button'
+							className='my-2 text-black bg-teal-500'
+							onClick={handleCloseNavMenu}
+						>
+							<Link href='/' className='no-underline text-black'>
+								Home
+							</Link>
+						</button>
+						<button
+							type='button'
+							className='my-2 text-black bg-teal-500'
+							onClick={handleCloseNavMenu}
+						>
+							<Link href='/search' className='no-underline text-black'>
+								Search
+							</Link>
+						</button>
+						<button
+							type='button'
+							onClick={handleCloseNavMenu}
+							className='my-2 text-black bg-teal-500'
+						>
+							<Link href='/mypets' className='no-underline text-black'>
+								My Pets
+							</Link>
+						</button>
+						<button
+							type='button'
+							onClick={handleCloseNavMenu}
+							className='my-2 text-black bg-teal-500'
+						>
+							<Link href='/pets' className='no-underline text-black'>
+								Pets
+							</Link>
+						</button>
+					</div>
+
+					<div className='grow'>
+						<button
+							data-tooltip-target='tooltip-settings'
+							data-tooltip-placement='bottom'
+							type='button'
+							onClick={handleOpenUserMenu}
+							className='p-0'
+						>
+							Llama
+							<Image alt='home-avatar' src='./src/assets/littleLlama.png' />
+						</button>
+						<div
+							id='tooltip-settings'
+							role='tooltip'
+							className='absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700'
+						>
+							Setting
+							<div className='tooltip-arrow' data-popper-arrow></div>
 						</div>
-						{user.admin && (
-							<div className='grow-0'>
-								<Tooltip title='Admin pages'>
-									<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-										<Avatar src='./src/assets/littleLlama.png' />
-									</IconButton>
-								</Tooltip>
-								<menu
-									className='mt-3'
-									id='menu-appbar'
-									anchorEl={anchorElUser}
-									anchorOrigin={{
-										vertical: 'top',
-										horizontal: 'right',
-									}}
-									keepMounted
-									transformOrigin={{
-										vertical: 'top',
-										horizontal: 'right',
-									}}
-									open={Boolean(anchorElUser)}
-									onClose={handleCloseUserMenu}
-								>
-									{admin.map((setting, index) => (
-										<button
-											key={index}
-											type='button'
-											onClick={handleCloseUserMenu}
-										>
-											<Link
-												className='text-center text-black dark:text-white no-underline'
-												href={setting.route}
-											>
-												{setting.page}
-											</Link>
-										</button>
-									))}
-								</menu>
-							</div>
-						)}
-					</toolbar>
+						<button type='button' onClick={handleCloseUserMenu}>
+							<Link href='/' className='text-center no-underline text-black'>
+								Hello
+							</Link>
+						</button>
+						<LocaleSwitcher />
+					</div>
 				</div>
 			</nav>
-		</HideOnScroll>
+		</React.Fragment>
 	);
 }

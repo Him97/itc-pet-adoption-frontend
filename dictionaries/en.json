@@ -1,19 +1,16 @@
 {
-	"navbar": {
-		"home": "Home",
-		"search": "Search",
-		"pets": "Pets",
-		"mypets": "My Pets",
-		"page": "Page",
-		"addpets": "Add Pets",
-		"dashboard": "Dashboard"
-	},
-	"home": {
-		"home": "Home"
-	},
-	"footer": {
-		"xin": "Xin Li",
-		"copyright": "Copyright",
-		"littlellama": "Little Llama"
-	}
+  "navigation": {
+    "home": "Home",
+    "about": "About"
+  },
+  "page": {
+    "home": {
+      "title": "Welcome to NextJs i18n",
+      "description": "Internationalization in NextJs 13 App router"
+    },
+    "about": {
+      "title": "About Us",
+      "description": "This is the about page"
+    }
+  }
 }

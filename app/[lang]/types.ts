@@ -11,7 +11,12 @@ export interface UserObj {
     admin?: boolean|null|undefined;
 }
 
-export interface PetObj {
+export interface CountryObj {
+    name: string;
+    iso2: string;
+}
+
+export interface EntryObj {
     id?: string|number;
     userid?: string|number;
 	category: string;
@@ -24,6 +29,11 @@ export interface PetObj {
     isgivinghelp?: boolean;
     isurgent?: boolean;
     image?: string;
+}
+
+export interface SubcategoryObj {
+	category: string;
+	subcategory: string;
 }
 
 export interface FadeProps {

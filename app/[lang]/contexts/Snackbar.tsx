@@ -1,5 +1,5 @@
-'use client';
 import * as React from 'react';
+import { Snackbar, Alert } from '@mui/material';
 
 interface SnackbarContextProps {
 	SnackbarProps: (message: string, isSuccess: boolean) => void;
@@ -29,14 +29,14 @@ export const SnackbarProvider: React.FC<{ children: React.ReactNode }> = ({
 		<SnackbarContext.Provider value={{ SnackbarProps }}>
 			{children}
 			{snackbarState && (
-				<div open={true} autoHideDuration={6000} onClose={handleClose}>
-					<alert
+				<Snackbar open={true} autoHideDuration={6000} onClose={handleClose}>
+					<Alert
 						severity={snackbarState.isSuccess ? 'success' : 'error'}
-						className='w-full'
+						sx={{ width: '100%' }}
 					>
 						{snackbarState.message}
-					</alert>
-				</div>
+					</Alert>
+				</Snackbar>
 			)}
 		</SnackbarContext.Provider>
 	);
